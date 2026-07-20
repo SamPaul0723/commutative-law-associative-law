@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>四则运算定律 — 交换律与结合律</title>
+<title>数学运算定律 — 交换律、结合律与一元一次方程</title>
 <style>
   :root {
     --bg: #f5f0eb;
@@ -336,6 +336,160 @@
     margin: 20px 0;
   }
 
+  /* ── Equation styles ── */
+  .eq-builder {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+    font-size: 1.2rem;
+    font-weight: 700;
+    padding: 8px 0;
+  }
+  .eq-builder input {
+    width: 72px;
+    padding: 8px 10px;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    font-size: 1.05rem;
+    text-align: center;
+    outline: none;
+    font-family: inherit;
+  }
+  .eq-builder input:focus { border-color: var(--accent); }
+  .eq-builder .var { color: #8b5cf6; font-size: 1.3rem; }
+  .eq-builder .eq-sign { font-size: 1.6rem; color: var(--accent); margin: 0 4px; }
+
+  .eq-display {
+    text-align: center;
+    font-size: 1.25rem;
+    font-weight: 700;
+    padding: 14px;
+    background: #fdfaf5;
+    border-radius: 12px;
+    margin: 14px 0;
+    border: 2px solid var(--border);
+    letter-spacing: .02em;
+  }
+
+  .solve-step {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    margin: 6px 0;
+    background: #fdfaf5;
+    border-radius: 10px;
+    border-left: 4px solid #ddd;
+    font-size: .95rem;
+    transition: all .35s ease;
+    opacity: 0;
+    transform: translateX(-20px);
+    animation: slideIn .4s ease forwards;
+  }
+  @keyframes slideIn { to { opacity:1; transform:translateX(0); } }
+  .solve-step.visible { opacity:1; transform:translateX(0); }
+  .solve-step .step-tag {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 10px;
+    font-size: .75rem;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .step-tag.move  { background: #fff3cd; color: #b85e1a; }
+  .step-tag.combine { background: #d4edda; color: #1e7e34; }
+  .step-tag.solve  { background: #cfe2ff; color: #0a53be; }
+  .step-tag.done   { background: #e0c3fc; color: #6f2da8; }
+  .solve-step .change {
+    display: inline-block;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-weight: 700;
+    animation: pulseSign .6s ease 2;
+  }
+  .change.pos-to-neg { background: #ffe0d9; color: #c0392b; }
+  .change.neg-to-pos { background: #d9f0e0; color: #1e7e34; }
+  @keyframes pulseSign {
+    0%,100% { transform:scale(1); }
+    50% { transform:scale(1.18); }
+  }
+
+  /* Balance scale */
+  .scale-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px 0;
+  }
+  .scale-beam {
+    position: relative;
+    width: 100%;
+    max-width: 500px;
+    height: 10px;
+    background: #d0c8b8;
+    border-radius: 5px;
+    transition: transform .5s ease;
+  }
+  .scale-pivot {
+    position: absolute;
+    left: 50%;
+    top: 10px;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 16px solid transparent;
+    border-right: 16px solid transparent;
+    border-bottom: 24px solid #888;
+  }
+  .scale-pan {
+    position: absolute;
+    top: 18px;
+    width: 90px;
+    padding: 10px 6px;
+    text-align: center;
+    background: #fdfaf5;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: .9rem;
+    transition: all .4s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,.06);
+  }
+  .scale-pan.left  { left: 30px; }
+  .scale-pan.right { right: 30px; }
+  .scale-pan .val {
+    font-size: 1.2rem;
+    color: var(--accent);
+  }
+
+  .equation-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    font-size: .92rem;
+    color: var(--sub);
+    margin: 4px 0;
+  }
+  .preset-btns {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .preset-btns button {
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1.5px solid var(--border);
+    background: var(--card);
+    cursor: pointer;
+    font-size: .85rem;
+    transition: var(--transition);
+    font-family: inherit;
+  }
+  .preset-btns button:hover { border-color: var(--accent); color: var(--accent); }
+
   .op-select {
     display: flex;
     gap: 6px;
@@ -369,13 +523,14 @@
 <body>
 
 <div class="hero">
-  <h1>四则运算定律</h1>
-  <p>通过交互理解交换律与结合律</p>
+  <h1>数学运算定律</h1>
+  <p>通过交互理解交换律、结合律与一元一次方程</p>
 </div>
 
 <div class="tabs">
   <button id="tab-commute" class="active" onclick="switchTab('commute')">交换律</button>
   <button id="tab-assoc" onclick="switchTab('assoc')">结合律</button>
+  <button id="tab-eq" onclick="switchTab('equation')">一元一次方程</button>
 </div>
 
 <div class="container">
@@ -611,6 +766,108 @@
   </div>
 </div>
 
+
+<!-- ════════════════════════════════════════════ -->
+<!--  一元一次方程 Tab                          -->
+<!-- ════════════════════════════════════════════ -->
+<div id="equation" class="tab-content">
+
+  <div class="card">
+    <h2>什么是一元一次方程？</h2>
+    <p class="desc">
+      一元一次方程是只含一个未知数（<strong>元</strong>）且未知数最高次数为 <strong>1（次）</strong> 的方程。
+      标准形式：<strong>ax + b = 0</strong>（a ≠ 0）。
+    </p>
+    <p>例如：<span class="highlight">3x + 5 = 2x + 7</span>、<span class="highlight">2x − 3 = 1</span>、<span class="highlight">−x + 4 = 6</span></p>
+
+    <div class="tip" style="margin-top:12px;">
+      <strong>核心思想——移项变号：</strong>将含有未知数的项移到等号左边，常数项移到等号右边。
+      跨过等号时，<strong>+ 变 −、− 变 +</strong>。这是最关键也最容易错的一步！
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>预设方程快速体验</h2>
+    <p class="desc">选择预设方程，观察求解步骤中符号的变化过程。</p>
+    <div class="preset-btns">
+      <button onclick="setPreset(1)">3x + 5 = 2x + 7</button>
+      <button onclick="setPreset(2)">2x − 3 = x + 1</button>
+      <button onclick="setPreset(3)">5x − 4 = 3x + 6</button>
+      <button onclick="setPreset(4)">−x + 2 = 3x − 6</button>
+      <button onclick="setPreset(5)">4x + 1 = 4x − 3</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>自定义方程 &amp; 逐步求解</h2>
+    <p class="desc">输入系数，点击「逐步求解」观察每一步的符号变化。</p>
+
+    <div class="eq-builder">
+      <input id="eq-a" type="number" value="3" style="width:60px;">
+      <span class="var">x</span>
+      <span style="color:var(--accent);">+</span>
+      <input id="eq-b" type="number" value="5" style="width:60px;">
+      <span class="eq-sign">=</span>
+      <input id="eq-c" type="number" value="2" style="width:60px;">
+      <span class="var">x</span>
+      <span style="color:var(--accent);">+</span>
+      <input id="eq-d" type="number" value="7" style="width:60px;">
+    </div>
+
+    <div class="eq-display" id="eq-original">
+      3x + 5 = 2x + 7
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="solveEquation()">逐步求解</button>
+      <button class="btn btn-outline" onclick="solveEquationAll()">一键展示全部步骤</button>
+      <button class="btn btn-outline" onclick="resetEquation()">重置</button>
+    </div>
+
+    <div id="solve-steps" style="margin-top:16px;"></div>
+  </div>
+
+  <div class="card">
+    <h2>天平可视化——为什么移项要变号？</h2>
+    <p class="desc">想象方程是一个天平，等号两边必须保持平衡。当你在一边增加或减少时，另一边也要做同样的事——等价于"移项变号"。</p>
+
+    <div class="eq-display" id="scale-eq-text" style="margin-bottom:8px;">
+      3x + 5 = 2x + 7
+    </div>
+
+    <div class="scale-wrap">
+      <div class="scale-beam" id="scale-beam">
+        <div class="scale-pivot"></div>
+        <div class="scale-pan left" id="pan-left">
+          左边<br><span class="val">3x + 5</span>
+        </div>
+        <div class="scale-pan right" id="pan-right">
+          右边<br><span class="val">2x + 7</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="slider-group" style="margin-top:12px;">
+      <span>当前步骤：</span>
+      <input type="range" id="scale-step" min="0" max="3" value="0" oninput="updateScale()">
+      <span class="val" id="scale-step-label">原始</span>
+    </div>
+    <div id="scale-desc" style="text-align:center;font-size:.9rem;color:var(--sub);margin-top:8px;">
+      拖动滑块观察天平两边如何变化
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>求解步骤口诀</h2>
+    <div style="font-size:1.1rem;text-align:center;line-height:2.2;">
+      <div class="step"><span class="step-num">1</span><strong>移项</strong>——含 x 的放左边，常数放右边，<span class="change pos-to-neg">过等号变号</span></div>
+      <div class="step"><span class="step-num">2</span><strong>合并同类项</strong>——左边合并 x 系数，右边合并常数</div>
+      <div class="step"><span class="step-num">3</span><strong>系数化为 1</strong>——两边同除以 x 的系数，得到 x = ?</div>
+      <div class="step"><span class="step-num">4</span><strong>检验</strong>——将 x 代回原方程验证左右相等</div>
+    </div>
+  </div>
+</div>
+
 </div><!-- /container -->
 
 <script>
@@ -620,7 +877,9 @@ function switchTab(name) {
   document.getElementById(name).classList.add('show');
   document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('active'));
   document.getElementById('tab-'+name).classList.add('active');
-  if(name==='commute') runCommute(); else runAssoc();
+  if(name==='commute') runCommute();
+  else if(name==='assoc') runAssoc();
+  else if(name==='equation') updateEqDisplay();
 }
 
 /* ════════════════════════════════════════════ */
@@ -793,7 +1052,276 @@ window.addEventListener('DOMContentLoaded', () => {
   runCommute();
   updateCommuteViz();
   updateAssocViz();
+  updateEqDisplay();
 });
+
+/* ════════════════════════════════════════════ */
+/*  一元一次方程求解                           */
+/* ════════════════════════════════════════════ */
+function getEqValues() {
+  return {
+    a: parseInt(document.getElementById('eq-a').value) || 0,
+    b: parseInt(document.getElementById('eq-b').value) || 0,
+    c: parseInt(document.getElementById('eq-c').value) || 0,
+    d: parseInt(document.getElementById('eq-d').value) || 0
+  };
+}
+
+function formatTerm(coef, first) {
+  if (coef === 0) return '';
+  if (coef === 1) return first ? 'x' : '+ x';
+  if (coef === -1) return '− x';
+  if (coef > 0 && !first) return '+ ' + coef + 'x';
+  if (coef > 0) return coef + 'x';
+  return coef + 'x'; // negative, already has sign
+}
+
+function formatConst(val, includeSign) {
+  if (val === 0) return '';
+  if (val > 0 && includeSign) return '+ ' + val;
+  if (val > 0) return '' + val;
+  return '' + val; // includes minus sign
+}
+
+function eqString(a, b, c, d) {
+  let left = '';
+  if (a !== 0) left += formatTerm(a, true);
+  if (b !== 0) {
+    if (a === 0 && b > 0) left += b;
+    else if (a === 0) left += b;
+    else if (b > 0) left += ' + ' + b;
+    else left += ' − ' + Math.abs(b);
+  }
+  if (left === '') left = '0';
+
+  let right = '';
+  if (c !== 0) right += formatTerm(c, true);
+  if (d !== 0) {
+    if (c === 0 && d > 0) right += d;
+    else if (c === 0) right += d;
+    else if (d > 0) right += ' + ' + d;
+    else right += ' − ' + Math.abs(d);
+  }
+  if (right === '') right = '0';
+  return left + ' = ' + right;
+}
+
+function updateEqDisplay() {
+  const {a,b,c,d} = getEqValues();
+  const str = eqString(a,b,c,d);
+  document.getElementById('eq-original').textContent = str;
+  document.getElementById('scale-eq-text').textContent = str;
+  document.getElementById('solve-steps').innerHTML = '';
+}
+
+function setPreset(n) {
+  const presets = {
+    1: {a:3,b:5,c:2,d:7},
+    2: {a:2,b:-3,c:1,d:1},
+    3: {a:5,b:-4,c:3,d:6},
+    4: {a:-1,b:2,c:3,d:-6},
+    5: {a:4,b:1,c:4,d:-3},
+  };
+  const p = presets[n];
+  document.getElementById('eq-a').value = p.a;
+  document.getElementById('eq-b').value = p.b;
+  document.getElementById('eq-c').value = p.c;
+  document.getElementById('eq-d').value = p.d;
+  updateEqDisplay();
+}
+
+// Solve: ax + b = cx + d
+// Step 1: move cx to left, b to right => ax - cx = d - b
+// Step 2: combine => (a-c)x = d-b
+// Step 3: x = (d-b)/(a-c)
+
+function solveEquation() {
+  const {a,b,c,d} = getEqValues();
+  const container = document.getElementById('solve-steps');
+  container.innerHTML = '';
+
+  const newA = a - c; // coefficient of x after moving
+  const newB = d - b; // constant after moving
+  const origStr = eqString(a,b,c,d);
+
+  let idx = 0;
+
+  // Step 1: show original
+  addStep(container, idx++, '原始方程：' + origStr, 'move');
+  container.lastChild.classList.add('visible');
+
+  // Step 2: move cx to left (change sign)
+  setTimeout(() => {
+    const cxTerm = c === 1 ? 'x' : (c === -1 ? '− x' : c + 'x');
+    const signLabel = c >= 0 ? 'pos-to-neg' : 'neg-to-pos';
+    const newSign = c >= 0 ? '−' : '+';
+    const absC = Math.abs(c) === 1 ? 'x' : Math.abs(c) + 'x';
+
+    if (c !== 0) {
+      addStep(container, idx++,
+        `移项（变号）：将右边的 <span class="change ${signLabel}">${cxTerm}</span> 移到左边，变为 <span class="change ${signLabel}">${newSign} ${absC}</span>`,
+        'move');
+    }
+
+    // Step 3: move constant b to right
+    setTimeout(() => {
+      const bLabel = b >= 0 ? 'pos-to-neg' : 'neg-to-pos';
+      const newBSign = b >= 0 ? '−' : '+';
+      const absB = Math.abs(b);
+
+      if (b !== 0) {
+        addStep(container, idx++,
+          `移项（变号）：将左边的 <span class="change ${bLabel}">${b}</span> 移到右边，变为 <span class="change ${bLabel}">${newBSign} ${absB}</span>`,
+          'move');
+      }
+
+      // Step 4: combined form
+      setTimeout(() => {
+        let combinedLeft = '';
+        if (newA !== 0) {
+          if (newA === 1) combinedLeft = 'x';
+          else if (newA === -1) combinedLeft = '− x';
+          else combinedLeft = newA + 'x';
+        } else combinedLeft = '0';
+
+        addStep(container, idx++,
+          `合并同类项：<strong>${combinedLeft} = ${newB}</strong>`,
+          'combine');
+
+        // Step 5: solve for x
+        setTimeout(() => {
+          let result;
+          if (newA === 0) {
+            if (newB === 0) {
+              addStep(container, idx++, '无穷多解（任意 x 都满足）', 'done');
+            } else {
+              addStep(container, idx++, '无解（等式矛盾）', 'done');
+            }
+          } else {
+            const x = newB / newA;
+            const xStr = Number.isInteger(x) ? x : parseFloat(x.toFixed(4));
+            addStep(container, idx++,
+              `系数化为 1：两边同除以 ${newA}，得 <strong>x = ${xStr}</strong>`,
+              'solve');
+
+            // Step 6: verify
+            setTimeout(() => {
+              const verifyLeft = a * x + b;
+              const verifyRight = c * x + d;
+              const eq = Math.abs(verifyLeft - verifyRight) < 0.0001;
+              addStep(container, idx++,
+                `检验：将 x = ${xStr} 代入左边得 ${formatNum(verifyLeft)}，右边得 ${formatNum(verifyRight)} → ${eq ? '<span class="eq">✓ 成立</span>' : '<span class="neq">✗ 不成立</span>'}`,
+                'done');
+            }, 400);
+          }
+        }, 500);
+      }, 400);
+    }, 500);
+  }, 400);
+}
+
+function solveEquationAll() {
+  document.getElementById('solve-steps').innerHTML = '';
+  const {a,b,c,d} = getEqValues();
+  const container = document.getElementById('solve-steps');
+  const newA = a - c;
+  const newB = d - b;
+  const origStr = eqString(a,b,c,d);
+
+  let steps = [];
+  steps.push({tag:'move', html:`原始方程：<strong>${origStr}</strong>`});
+
+  if (c !== 0) {
+    let cxTerm = '';
+    if (c === 1) cxTerm = 'x';
+    else if (c === -1) cxTerm = '−x';
+    else cxTerm = c + 'x';
+    let newSign = c >= 0 ? '−' : '+';
+    let absTerm = Math.abs(c) === 1 ? 'x' : Math.abs(c) + 'x';
+    let sClass = c >= 0 ? 'pos-to-neg' : 'neg-to-pos';
+    steps.push({tag:'move', html:`移项变号：右边 <span class="change ${sClass}">${cxTerm}</span> 移到左边 → <span class="change ${sClass}">${newSign} ${absTerm}</span>`});
+  }
+
+  if (b !== 0) {
+    let newSign = b >= 0 ? '−' : '+';
+    let sClass = b >= 0 ? 'pos-to-neg' : 'neg-to-pos';
+    steps.push({tag:'move', html:`移项变号：左边 <span class="change ${sClass}">${b}</span> 移到右边 → <span class="change ${sClass}">${newSign} ${Math.abs(b)}</span>`});
+  }
+
+  let combinedLeft = '';
+  if (newA === 0) combinedLeft = '0';
+  else if (newA === 1) combinedLeft = 'x';
+  else if (newA === -1) combinedLeft = '−x';
+  else combinedLeft = newA + 'x';
+
+  steps.push({tag:'combine', html:`合并同类项：<strong>${combinedLeft} = ${newB}</strong>`});
+
+  if (newA === 0) {
+    if (newB === 0) steps.push({tag:'done', html:'结论：无穷多解（任意 x 都满足）'});
+    else steps.push({tag:'done', html:'结论：无解（等式矛盾）'});
+  } else {
+    const x = newB / newA;
+    const xStr = Number.isInteger(x) ? x : parseFloat(x.toFixed(4));
+    steps.push({tag:'solve', html:`系数化为 1：两边同除以 ${newA}，得 <strong>x = ${xStr}</strong>`});
+    const vl = a*x + b, vr = c*x + d;
+    const eq = Math.abs(vl - vr) < 0.0001;
+    steps.push({tag:'done', html:`检验：代入 x = ${xStr}，左 = ${formatNum(vl)}，右 = ${formatNum(vr)} → ${eq ? '<span class="eq">✓ 成立</span>' : '<span class="neq">✗ 不成立</span>'}`});
+  }
+
+  steps.forEach((s, i) => {
+    setTimeout(() => {
+      addStep(container, i, s.html, s.tag);
+    }, i * 120);
+  });
+}
+
+function addStep(container, idx, html, tag) {
+  const div = document.createElement('div');
+  div.className = 'solve-step';
+  div.innerHTML = `<span class="step-tag ${tag}">${tag==='move'?'移项':tag==='combine'?'合并':tag==='solve'?'求解':tag==='done'?'完成':''}</span> ${html}`;
+  div.style.animationDelay = '0s';
+  div.classList.add('visible');
+  container.appendChild(div);
+}
+
+function resetEquation() {
+  document.getElementById('solve-steps').innerHTML = '';
+}
+
+// Scale visualization
+function updateScale() {
+  const step = +document.getElementById('scale-step').value;
+  const {a,b,c,d} = getEqValues();
+  const labels = ['原始', '移项变号', '合并同类项', '求解'];
+  document.getElementById('scale-step-label').textContent = labels[step];
+
+  let leftText, rightText, desc;
+  if (step === 0) {
+    leftText = `${a}x + ${b}`;
+    rightText = `${c}x + ${d}`;
+    desc = `原始方程：${eqString(a,b,c,d)}。天平两边目前平衡。`;
+  } else if (step === 1) {
+    const na = a - c, nb = b;
+    leftText = `${na}x + ${b}`;
+    rightText = `${d}`;
+    desc = `移项：把 ${c}x 从右边移到左边（变号），${b} 从左边移到右边（变号）。天平仍然平衡！`;
+  } else if (step === 2) {
+    const na = a - c, nb = d - b;
+    leftText = `${na}x`;
+    rightText = `${nb}`;
+    desc = `合并：左边 = ${na}x，右边 = ${nb}`;
+  } else {
+    const na = a - c, nb = d - b;
+    const x = na===0 ? '?' : (nb/na);
+    leftText = 'x';
+    rightText = Number.isInteger(x) ? x : parseFloat(x.toFixed(4));
+    desc = `求解：x = ${rightText}。把 x 代回原方程验证。`;
+  }
+
+  document.getElementById('pan-left').innerHTML = `左边<br><span class="val">${leftText}</span>`;
+  document.getElementById('pan-right').innerHTML = `右边<br><span class="val">${rightText}</span>`;
+  document.getElementById('scale-desc').textContent = desc;
+}
 </script>
 </body>
 </html>
