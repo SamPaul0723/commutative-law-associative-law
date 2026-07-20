@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>四则运算定律 — 交换律与结合律</title>
+<style>
+  :root {
+    --bg: #f5f0eb;
+    --card: #ffffff;
+    --text: #2c2416;
+    --sub: #6b5e4a;
+    --accent: #d4842a;
+    --accent2: #4a8c5c;
+    --danger: #c0392b;
+    --border: #e0d7c6;
+    --shadow: 0 2px 12px rgba(60,40,20,.08);
+    --radius: 14px;
+    --transition: .25s cubic-bezier(.4,0,.2,1);
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  /* ── Header ── */
+  .hero {
+    text-align: center;
+    padding: 48px 20px 32px;
+    background: linear-gradient(135deg, #f8e6d3 0%, #f5f0eb 40%, #e8ecf1 100%);
+  }
+  .hero h1 {
+    font-size: 2.4rem;
+    font-weight: 800;
+    letter-spacing: .02em;
+    background: linear-gradient(135deg, #d4842a, #b85e1a);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .hero p {
+    font-size: 1.05rem;
+    color: var(--sub);
+    margin-top: 8px;
+  }
+
+  /* ── Tabs ── */
+  .tabs {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin: -20px auto 28px;
+    position: sticky;
+    top: 12px;
+    z-index: 10;
+  }
+  .tabs button {
+    padding: 10px 28px;
+    border-radius: 30px;
+    border: 1.5px solid var(--border);
+    background: var(--card);
+    font-size: .95rem;
+    cursor: pointer;
+    transition: var(--transition);
+    font-weight: 600;
+    color: var(--sub);
+    backdrop-filter: blur(6px);
+  }
+  .tabs button.active {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+    box-shadow: 0 4px 16px rgba(212,132,42,.35);
+  }
+
+  /* ── Layout ── */
+  .container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 20px 60px;
+  }
+  .tab-content { display: none; animation: fadeIn .35s ease; }
+  .tab-content.show { display: block; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+
+  /* ── Cards ── */
+  .card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 28px 30px;
+    margin-bottom: 24px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+  }
+  .card h2 {
+    font-size: 1.35rem;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card .badge {
+    display: inline-block;
+    font-size: .72rem;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-weight: 700;
+  }
+  .badge.true  { background: #d4edda; color: #1e7e34; }
+  .badge.false { background: #f8d7da; color: #a71d2a; }
+
+  .desc {
+    color: var(--sub);
+    margin-bottom: 18px;
+    font-size: .95rem;
+  }
+
+  /* ── Demo area ── */
+  .demo-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+  .demo-row label {
+    font-weight: 600;
+    font-size: .88rem;
+    min-width: 40px;
+  }
+  .demo-row input {
+    width: 100px;
+    padding: 10px 12px;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    font-size: 1.05rem;
+    text-align: center;
+    transition: var(--transition);
+    outline: none;
+    font-family: inherit;
+  }
+  .demo-row input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(212,132,42,.12);
+  }
+  .demo-row .op {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--accent);
+    padding: 0 4px;
+  }
+
+  .result-box {
+    background: #fdfaf5;
+    border: 2px dashed var(--border);
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-top: 14px;
+    text-align: center;
+    font-size: 1.1rem;
+    transition: var(--transition);
+    min-height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .result-box .eq {
+    color: var(--accent2);
+    font-weight: 700;
+    font-size: 1.2rem;
+  }
+  .result-box .neq {
+    color: var(--danger);
+    font-weight: 700;
+    font-size: 1.2rem;
+  }
+
+  .highlight {
+    background: #fff3cd;
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-weight: 700;
+  }
+
+  /* ── Slider ── */
+  .slider-group {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .slider-group input[type=range] {
+    flex: 1;
+    min-width: 160px;
+    accent-color: var(--accent);
+    height: 6px;
+  }
+  .slider-group .val {
+    font-weight: 700;
+    font-size: 1.15rem;
+    min-width: 36px;
+    text-align: center;
+    color: var(--accent);
+  }
+
+  /* ── Btn ── */
+  .btn {
+    padding: 10px 24px;
+    border-radius: 24px;
+    border: none;
+    cursor: pointer;
+    font-size: .92rem;
+    font-weight: 600;
+    transition: var(--transition);
+    font-family: inherit;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: #fff;
+  }
+  .btn-primary:hover { filter: brightness(1.08); transform: translateY(-1px); }
+  .btn-outline {
+    background: transparent;
+    border: 2px solid var(--accent);
+    color: var(--accent);
+  }
+  .btn-outline:hover { background: var(--accent); color:#fff; }
+
+  /* ── Viz ── */
+  .viz-bar-wrap {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-top: 16px;
+  }
+  .viz-bar-col {
+    flex: 1;
+    min-width: 100px;
+    text-align: center;
+  }
+  .viz-bar-col .bar {
+    background: linear-gradient(180deg, #f0c27b, #d4842a);
+    border-radius: 10px 10px 4px 4px;
+    margin: 0 auto 8px;
+    transition: height .45s cubic-bezier(.4,0,.2,1);
+    position: relative;
+    min-width: 40px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+  }
+  .viz-bar-col .bar span {
+    color: #fff;
+    font-weight: 700;
+    font-size: .85rem;
+    padding-bottom: 6px;
+  }
+  .viz-bar-col .label {
+    font-size: .82rem;
+    color: var(--sub);
+    font-weight: 600;
+  }
+
+  .viz-group {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .viz-group .op-big {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--accent);
+  }
+  .viz-group .eq-big {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--accent2);
+  }
+
+  /* ── Step-by-step ── */
+  .step {
+    background: #fdfaf5;
+    border-left: 4px solid var(--accent);
+    border-radius: 0 10px 10px 0;
+    padding: 10px 16px;
+    margin: 8px 0;
+    font-size: .95rem;
+    animation: fadeIn .3s ease;
+  }
+  .step .step-num {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    line-height: 24px;
+    text-align: center;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #fff;
+    font-size: .78rem;
+    font-weight: 700;
+    margin-right: 8px;
+  }
+
+  .btn-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 14px;
+  }
+
+  /* ── Tip ── */
+  .tip {
+    background: #e8f5e9;
+    border-radius: 10px;
+    padding: 14px 18px;
+    font-size: .9rem;
+    margin-top: 14px;
+    color: #2e7d32;
+  }
+  .tip.warn {
+    background: #fff3e0;
+    color: #e65100;
+  }
+
+  hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 20px 0;
+  }
+
+  .op-select {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .op-select button {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    border: 2px solid var(--border);
+    background: var(--card);
+    font-size: 1.2rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: var(--transition);
+  }
+  .op-select button.active {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+  }
+
+  /* ── Responsive ── */
+  @media (max-width:600px) {
+    .hero h1 { font-size:1.6rem; }
+    .tabs button { padding:8px 18px; font-size:.85rem; }
+    .card { padding:18px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>四则运算定律</h1>
+  <p>通过交互理解交换律与结合律</p>
+</div>
+
+<div class="tabs">
+  <button id="tab-commute" class="active" onclick="switchTab('commute')">交换律</button>
+  <button id="tab-assoc" onclick="switchTab('assoc')">结合律</button>
+</div>
+
+<div class="container">
+
+<!-- ════════════════════════════════════════════ -->
+<!--  交换律 Tab                                -->
+<!-- ════════════════════════════════════════════ -->
+<div id="commute" class="tab-content show">
+
+  <!-- 概念卡片 -->
+  <div class="card">
+    <h2>什么是交换律？</h2>
+    <p class="desc">
+      交换律说的是：<strong>交换两个数的位置，运算结果不变</strong>。
+      但并非所有运算都满足交换律——
+    </p>
+    <p>
+      <span class="badge true">成立</span> <strong>加法</strong>：<code>a + b = b + a</code> &nbsp;&nbsp;（例：3 + 5 = 5 + 3 = 8）
+    </p>
+    <p style="margin-top:6px;">
+      <span class="badge true">成立</span> <strong>乘法</strong>：<code>a × b = b × a</code> &nbsp;&nbsp;（例：4 × 7 = 7 × 4 = 28）
+    </p>
+    <p style="margin-top:6px;">
+      <span class="badge false">不成立</span> <strong>减法</strong>：<code>a − b ≠ b − a</code>（例：8 − 3 = 5，但 3 − 8 = −5）
+    </p>
+    <p style="margin-top:6px;">
+      <span class="badge false">不成立</span> <strong>除法</strong>：<code>a ÷ b ≠ b ÷ a</code>（例：12 ÷ 4 = 3，但 4 ÷ 12 ≈ 0.33）
+    </p>
+  </div>
+
+  <!-- 交互演示 -->
+  <div class="card">
+    <h2>动手试一试</h2>
+    <p class="desc">选择运算、输入两个数，观察交换位置后结果是否相等。</p>
+
+    <div class="op-select" style="margin-bottom:16px;">
+      <button onclick="setCommuteOp('+')" id="co-plus"  class="active">+</button>
+      <button onclick="setCommuteOp('−')" id="co-minus">−</button>
+      <button onclick="setCommuteOp('×')" id="co-mul">×</button>
+      <button onclick="setCommuteOp('÷')" id="co-div">÷</button>
+    </div>
+
+    <div class="demo-row">
+      <label>a =</label>
+      <input id="ca" type="number" value="8" oninput="runCommute()">
+      <span class="op" id="cop1">+</span>
+      <label>b =</label>
+      <input id="cb" type="number" value="3" oninput="runCommute()">
+    </div>
+
+    <div class="demo-row" style="color:var(--sub);font-size:.9rem;">
+      <span>交换后：</span>
+      <strong>b</strong> <span id="cop2">+</span> <strong>a</strong>
+    </div>
+
+    <div class="result-box" id="commute-result">
+      输入数字查看结果
+    </div>
+  </div>
+
+  <!-- 可视化滑块 -->
+  <div class="card">
+    <h2>可视化——用格子感受交换律</h2>
+    <p class="desc">拖动滑块改变数值，观察两边的总数是否始终一致。</p>
+    <div style="display:flex;gap:24px;flex-wrap:wrap;align-items:flex-end;justify-content:center;">
+      <div style="text-align:center;">
+        <div style="font-weight:700;margin-bottom:8px;">a + b</div>
+        <div class="viz-bar-col">
+          <div class="bar" id="bar-a" style="width:60px;height:60px;"><span>0</span></div>
+          <div class="label">a</div>
+        </div>
+        <div style="font-size:1.4rem;font-weight:700;color:var(--accent);margin:4px 0;">+</div>
+        <div class="viz-bar-col">
+          <div class="bar" id="bar-b" style="width:60px;height:30px;background:linear-gradient(180deg,#a8d5ba,#4a8c5c);"><span>0</span></div>
+          <div class="label">b</div>
+        </div>
+      </div>
+      <div style="font-size:2rem;font-weight:700;color:var(--accent2);">=</div>
+      <div style="text-align:center;">
+        <div style="font-weight:700;margin-bottom:8px;">b + a</div>
+        <div class="viz-bar-col">
+          <div class="bar" id="bar-b2" style="width:60px;height:30px;background:linear-gradient(180deg,#a8d5ba,#4a8c5c);"><span>0</span></div>
+          <div class="label">b</div>
+        </div>
+        <div style="font-size:1.4rem;font-weight:700;color:var(--accent);margin:4px 0;">+</div>
+        <div class="viz-bar-col">
+          <div class="bar" id="bar-a2" style="width:60px;height:60px;"><span>0</span></div>
+          <div class="label">a</div>
+        </div>
+      </div>
+    </div>
+    <div class="slider-group" style="margin-top:20px;">
+      <span>a =</span>
+      <input type="range" id="viz-a" min="1" max="20" value="6" oninput="updateCommuteViz()">
+      <span class="val" id="viz-a-val">6</span>
+      <span style="margin-left:12px;">b =</span>
+      <input type="range" id="viz-b" min="1" max="20" value="4" oninput="updateCommuteViz()">
+      <span class="val" id="viz-b-val">4</span>
+    </div>
+    <div class="result-box" id="viz-commute-result" style="margin-top:14px;">
+      a + b = <span class="highlight">10</span>，b + a = <span class="highlight">10</span> → <span class="eq">相等</span>
+    </div>
+  </div>
+
+  <!-- 生活例子 -->
+  <div class="card">
+    <h2>生活中的交换律</h2>
+    <p class="desc">想象你有 <strong>3 个苹果</strong> 和 <strong>5 个橙子</strong>：</p>
+    <p>先数苹果再数橙子：<span class="highlight">3 + 5 = 8</span> 个水果</p>
+    <p>先数橙子再数苹果：<span class="highlight">5 + 3 = 8</span> 个水果</p>
+    <div class="tip">无论先数哪个，总数不变——这就是加法交换律在日常中的体现。</div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════ -->
+<!--  结合律 Tab                                -->
+<!-- ════════════════════════════════════════════ -->
+<div id="assoc" class="tab-content">
+
+  <!-- 概念卡片 -->
+  <div class="card">
+    <h2>什么是结合律？</h2>
+    <p class="desc">
+      结合律说的是：<strong>三个数运算时，先算前两个还是先算后两个，结果不变</strong>。
+      它决定了括号可以"挪位置"。
+    </p>
+    <p>
+      <span class="badge true">成立</span> <strong>加法</strong>：<code>(a + b) + c = a + (b + c)</code>
+    </p>
+    <p style="margin-top:6px;">
+      <span class="badge true">成立</span> <strong>乘法</strong>：<code>(a × b) × c = a × (b × c)</code>
+    </p>
+    <p style="margin-top:6px;">
+      <span class="badge false">不成立</span> <strong>减法</strong>：<code>(a − b) − c ≠ a − (b − c)</code>
+    </p>
+    <p style="margin-top:6px;">
+      <span class="badge false">不成立</span> <strong>除法</strong>：<code>(a ÷ b) ÷ c ≠ a ÷ (b ÷ c)</code>
+    </p>
+    <div class="tip warn">
+      <strong>关键区别：</strong>交换律是"换位置"，结合律是"移括号"。两者是独立的性质。
+    </div>
+  </div>
+
+  <!-- 交互演示 -->
+  <div class="card">
+    <h2>动手试一试——移括号</h2>
+    <p class="desc">选择运算、输入三个数，对比两种括号位置下结果是否相同。</p>
+
+    <div class="op-select" style="margin-bottom:16px;">
+      <button onclick="setAssocOp('+')" id="ao-plus" class="active">+</button>
+      <button onclick="setAssocOp('−')" id="ao-minus">−</button>
+      <button onclick="setAssocOp('×')" id="ao-mul">×</button>
+      <button onclick="setAssocOp('÷')" id="ao-div">÷</button>
+    </div>
+
+    <div class="demo-row">
+      <label>a =</label>
+      <input id="aa" type="number" value="12" oninput="runAssoc()">
+      <label>b =</label>
+      <input id="ab" type="number" value="4" oninput="runAssoc()">
+      <label>c =</label>
+      <input id="ac" type="number" value="2" oninput="runAssoc()">
+    </div>
+    <div style="font-size:.88rem;color:var(--sub);margin-bottom:10px;">
+      方式一：<strong>(a <span id="aop1">+</span> b) <span id="aop2">+</span> c</strong>&nbsp;&nbsp;&nbsp;
+      方式二：<strong>a <span id="aop3">+</span> (b <span id="aop4">+</span> c)</strong>
+    </div>
+
+    <div class="result-box" id="assoc-result">
+      输入数字查看结果
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-outline" onclick="showAssocSteps()">显示分步计算</button>
+    </div>
+    <div id="assoc-steps" style="margin-top:12px;"></div>
+  </div>
+
+  <!-- 可视化 -->
+  <div class="card">
+    <h2>可视化——三堆积木的结合</h2>
+    <p class="desc">a、b、c 三堆积木，看两种分组方式的总数是否一致。</p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;justify-content:center;">
+      <!-- 方式一: (a+b)+c -->
+      <div style="text-align:center;">
+        <div style="font-weight:700;font-size:.85rem;margin-bottom:6px;">(a + b) + c</div>
+        <div style="border:2px dashed var(--accent);border-radius:8px;padding:6px 8px;display:inline-block;">
+          <div style="display:flex;align-items:flex-end;gap:4px;justify-content:center;">
+            <div class="bar" id="av-a" style="width:36px;height:60px;"><span></span></div>
+            <div class="bar" id="av-b" style="width:36px;height:30px;background:linear-gradient(180deg,#a8d5ba,#4a8c5c);"><span></span></div>
+          </div>
+        </div>
+        <span style="font-size:1.2rem;font-weight:700;color:var(--accent);margin:0 4px;">+</span>
+        <div class="bar" id="av-c" style="width:36px;height:20px;background:linear-gradient(180deg,#b8c6db,#5b7db5);display:inline-block;vertical-align:bottom;"><span></span></div>
+      </div>
+      <div style="font-size:2rem;font-weight:700;color:var(--accent2);">=</div>
+      <!-- 方式二: a+(b+c) -->
+      <div style="text-align:center;">
+        <div style="font-weight:700;font-size:.85rem;margin-bottom:6px;">a + (b + c)</div>
+        <div class="bar" id="av-a2" style="width:36px;height:60px;display:inline-block;vertical-align:bottom;"><span></span></div>
+        <span style="font-size:1.2rem;font-weight:700;color:var(--accent);margin:0 4px;">+</span>
+        <div style="border:2px dashed var(--accent2);border-radius:8px;padding:6px 8px;display:inline-block;">
+          <div style="display:flex;align-items:flex-end;gap:4px;justify-content:center;">
+            <div class="bar" id="av-b2" style="width:36px;height:30px;background:linear-gradient(180deg,#a8d5ba,#4a8c5c);"><span></span></div>
+            <div class="bar" id="av-c2" style="width:36px;height:20px;background:linear-gradient(180deg,#b8c6db,#5b7db5);"><span></span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="slider-group" style="margin-top:20px;">
+      <span>a =</span>
+      <input type="range" id="aviz-a" min="1" max="15" value="8" oninput="updateAssocViz()">
+      <span class="val" id="aviz-a-val">8</span>
+      <span style="margin-left:8px;">b =</span>
+      <input type="range" id="aviz-b" min="1" max="15" value="5" oninput="updateAssocViz()">
+      <span class="val" id="aviz-b-val">5</span>
+      <span style="margin-left:8px;">c =</span>
+      <input type="range" id="aviz-c" min="1" max="15" value="3" oninput="updateAssocViz()">
+      <span class="val" id="aviz-c-val">3</span>
+    </div>
+    <div class="result-box" id="viz-assoc-result" style="margin-top:14px;">
+      (a + b) + c = <span class="highlight">16</span>，a + (b + c) = <span class="highlight">16</span> → <span class="eq">相等</span>
+    </div>
+  </div>
+
+  <!-- 生活例子 -->
+  <div class="card">
+    <h2>生活中的结合律</h2>
+    <p class="desc">你有 <strong>2 个苹果</strong>、<strong>3 个苹果</strong> 和 <strong>4 个苹果</strong>：</p>
+    <p>先把前两堆合并再加入第三堆：<span class="highlight">(2 + 3) + 4 = 5 + 4 = 9</span></p>
+    <p>先把后两堆合并再加入第一堆：<span class="highlight">2 + (3 + 4) = 2 + 7 = 9</span></p>
+    <div class="tip">无论先合并哪两堆苹果，总个数始终不变——这就是加法结合律。</div>
+  </div>
+</div>
+
+</div><!-- /container -->
+
+<script>
+/* ───────── Tab 切换 ───────── */
+function switchTab(name) {
+  document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('show'));
+  document.getElementById(name).classList.add('show');
+  document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  if(name==='commute') runCommute(); else runAssoc();
+}
+
+/* ════════════════════════════════════════════ */
+/*  交换律                                     */
+/* ════════════════════════════════════════════ */
+let commuteOp = '+';
+function setCommuteOp(op) {
+  commuteOp = op;
+  ['plus','minus','mul','div'].forEach((id,i)=>{
+    const btn = document.getElementById('co-'+id);
+    btn.classList.toggle('active', ['+','−','×','÷'][i]===op);
+  });
+  document.getElementById('cop1').textContent = op;
+  document.getElementById('cop2').textContent = op;
+  runCommute();
+}
+
+function compute(a, op, b) {
+  switch(op) {
+    case '+': return a+b;
+    case '−': return a-b;
+    case '×': return a*b;
+    case '÷': return b===0 ? NaN : a/b;
+    default: return NaN;
+  }
+}
+
+function formatNum(n) {
+  if (isNaN(n)) return '无意义';
+  if (!Number.isInteger(n)) return parseFloat(n.toFixed(4)).toString();
+  return n.toString();
+}
+
+function runCommute() {
+  const a = parseFloat(document.getElementById('ca').value) || 0;
+  const b = parseFloat(document.getElementById('cb').value) || 0;
+  const left  = compute(a, commuteOp, b);
+  const right = compute(b, commuteOp, a);
+  const box = document.getElementById('commute-result');
+
+  const la = formatNum(a), lb = formatNum(b), ll = formatNum(left), lr = formatNum(right);
+
+  if (isNaN(left) || isNaN(right)) {
+    box.innerHTML = `<span class="neq">运算无意义（除数不能为零）</span>`;
+    return;
+  }
+
+  const eq = left === right;
+  box.innerHTML = `
+    <div>
+      <strong>${la} ${commuteOp} ${lb} = ${ll}</strong>
+      &nbsp;|&nbsp;
+      <strong>${lb} ${commuteOp} ${la} = ${lr}</strong>
+      &nbsp;→&nbsp;
+      ${eq
+        ? '<span class="eq">✓ 结果相等，交换律成立</span>'
+        : '<span class="neq">✗ 结果不等，交换律不成立</span>'}
+    </div>
+  `;
+}
+
+/* 可视化 */
+function updateCommuteViz() {
+  const a = +document.getElementById('viz-a').value;
+  const b = +document.getElementById('viz-b').value;
+  document.getElementById('viz-a-val').textContent = a;
+  document.getElementById('viz-b-val').textContent = b;
+
+  const scale = 14;
+  document.getElementById('bar-a').style.height  = (a*scale)+'px';
+  document.getElementById('bar-a').querySelector('span').textContent = a;
+  document.getElementById('bar-b').style.height  = (b*scale)+'px';
+  document.getElementById('bar-b').querySelector('span').textContent = b;
+  document.getElementById('bar-b2').style.height = (b*scale)+'px';
+  document.getElementById('bar-b2').querySelector('span').textContent = b;
+  document.getElementById('bar-a2').style.height = (a*scale)+'px';
+  document.getElementById('bar-a2').querySelector('span').textContent = a;
+
+  document.getElementById('viz-commute-result').innerHTML =
+    `a + b = <span class="highlight">${a+b}</span>，b + a = <span class="highlight">${b+a}</span> → <span class="eq">相等</span>`;
+}
+
+/* ════════════════════════════════════════════ */
+/*  结合律                                     */
+/* ════════════════════════════════════════════ */
+let assocOp = '+';
+function setAssocOp(op) {
+  assocOp = op;
+  ['plus','minus','mul','div'].forEach((id,i)=>{
+    document.getElementById('ao-'+id).classList.toggle('active', ['+','−','×','÷'][i]===op);
+  });
+  ['aop1','aop2','aop3','aop4'].forEach(id=>document.getElementById(id).textContent=op);
+  runAssoc();
+}
+
+function runAssoc() {
+  const a = parseFloat(document.getElementById('aa').value) || 0;
+  const b = parseFloat(document.getElementById('ab').value) || 0;
+  const c = parseFloat(document.getElementById('ac').value) || 0;
+  const box = document.getElementById('assoc-result');
+
+  const leftInner  = compute(a, assocOp, b);
+  const leftTotal  = compute(leftInner, assocOp, c);
+  const rightInner = compute(b, assocOp, c);
+  const rightTotal = compute(a, assocOp, rightInner);
+
+  const fa=formatNum(a), fb=formatNum(b), fc=formatNum(c);
+  const fl=formatNum(leftTotal), fr=formatNum(rightTotal);
+
+  if (isNaN(leftTotal)||isNaN(rightTotal)) {
+    box.innerHTML = `<span class="neq">运算无意义（除数可能为零）</span>`;
+    return;
+  }
+
+  const eq = leftTotal === rightTotal;
+  box.innerHTML = `
+    <div>
+      <strong>(${fa} ${assocOp} ${fb}) ${assocOp} ${fc} = ${fl}</strong>
+      &nbsp;|&nbsp;
+      <strong>${fa} ${assocOp} (${fb} ${assocOp} ${fc}) = ${fr}</strong>
+      &nbsp;→&nbsp;
+      ${eq
+        ? '<span class="eq">✓ 结果相等，结合律成立</span>'
+        : '<span class="neq">✗ 结果不等，结合律不成立</span>'}
+    </div>
+  `;
+}
+
+function showAssocSteps() {
+  const a = parseFloat(document.getElementById('aa').value) || 0;
+  const b = parseFloat(document.getElementById('ab').value) || 0;
+  const c = parseFloat(document.getElementById('ac').value) || 0;
+  const fa=formatNum(a), fb=formatNum(b), fc=formatNum(c);
+
+  const li = compute(a,assocOp,b);
+  const lt = compute(li,assocOp,c);
+  const ri = compute(b,assocOp,c);
+  const rt = compute(a,assocOp,ri);
+
+  document.getElementById('assoc-steps').innerHTML = `
+    <div class="step"><span class="step-num">1</span>方式一：先算 a ${assocOp} b → ${fa} ${assocOp} ${fb} = <strong>${formatNum(li)}</strong></div>
+    <div class="step"><span class="step-num">2</span>再算 (结果) ${assocOp} c → ${formatNum(li)} ${assocOp} ${fc} = <strong>${formatNum(lt)}</strong></div>
+    <div class="step"><span class="step-num">3</span>方式二：先算 b ${assocOp} c → ${fb} ${assocOp} ${fc} = <strong>${formatNum(ri)}</strong></div>
+    <div class="step"><span class="step-num">4</span>再算 a ${assocOp} (结果) → ${fa} ${assocOp} ${formatNum(ri)} = <strong>${formatNum(rt)}</strong></div>
+    <div class="tip" style="margin-top:10px;">${lt===rt
+      ? '<strong>结论：</strong>两边结果相等，结合律成立。无论先算哪两个数，最终结果相同。'
+      : '<strong>结论：</strong>两边结果不等，结合律不成立。括号的位置影响了最终结果！'}</div>
+  `;
+}
+
+/* 可视化 */
+function updateAssocViz() {
+  const a=+document.getElementById('aviz-a').value;
+  const b=+document.getElementById('aviz-b').value;
+  const c=+document.getElementById('aviz-c').value;
+  document.getElementById('aviz-a-val').textContent=a;
+  document.getElementById('aviz-b-val').textContent=b;
+  document.getElementById('aviz-c-val').textContent=c;
+  const s=12;
+  ['av-a','av-a2'].forEach(id=>{document.getElementById(id).style.height=(a*s)+'px';});
+  ['av-b','av-b2'].forEach(id=>{document.getElementById(id).style.height=(b*s)+'px';});
+  ['av-c','av-c2'].forEach(id=>{document.getElementById(id).style.height=(c*s)+'px';});
+
+  document.getElementById('viz-assoc-result').innerHTML =
+    `(a + b) + c = <span class="highlight">${a+b+c}</span>，a + (b + c) = <span class="highlight">${a+b+c}</span> → <span class="eq">相等</span>`;
+}
+
+/* ── Init ── */
+window.addEventListener('DOMContentLoaded', () => {
+  runCommute();
+  updateCommuteViz();
+  updateAssocViz();
+});
+</script>
+</body>
+</html>
