@@ -858,8 +858,91 @@
   </div>
 
   <div class="card">
+    <h2>去括号——符号变化规则</h2>
+    <p class="desc">
+      方程中经常出现括号，去掉括号时<strong>符号如何变化</strong>是解题的关键。
+      规则取决于括号前面的符号：
+    </p>
+
+    <div style="display:flex;gap:16px;flex-wrap:wrap;">
+      <div style="flex:1;min-width:220px;background:#f0fdf4;border-radius:12px;padding:16px;border:1px solid #bbf7d0;">
+        <div style="font-weight:700;color:#166534;margin-bottom:6px;">规则一：括号前是 <span style="font-size:1.3rem;">+</span></div>
+        <p style="font-size:.9rem;color:#333;">去掉括号和前面的 + 号，括号内<strong style="color:#166534;">各项符号不变</strong></p>
+        <p style="margin-top:6px;"><code>a + (b − c) = a + b − c</code></p>
+        <p><code>a + (−b + c) = a − b + c</code></p>
+      </div>
+
+      <div style="flex:1;min-width:220px;background:#fff5f5;border-radius:12px;padding:16px;border:1px solid #fecaca;">
+        <div style="font-weight:700;color:#991b1b;margin-bottom:6px;">规则二：括号前是 <span style="font-size:1.3rem;">−</span></div>
+        <p style="font-size:.9rem;color:#333;">去掉括号和前面的 − 号，括号内<strong style="color:#991b1b;">各项全部变号</strong></p>
+        <p style="margin-top:6px;"><code>a − (b + c) = a − b − c</code></p>
+        <p><code>a − (b − c) = a − b + c</code></p>
+      </div>
+
+      <div style="flex:1;min-width:220px;background:#eff6ff;border-radius:12px;padding:16px;border:1px solid #bfdbfe;">
+        <div style="font-weight:700;color:#1e40af;margin-bottom:6px;">规则三：括号前是系数</div>
+        <p style="font-size:.9rem;color:#333;">用<strong style="color:#1e40af;">乘法分配律</strong>展开系数，符号跟随系数</p>
+        <p style="margin-top:6px;"><code>2(x − 3) = 2x − 6</code></p>
+        <p><code>−3(x + 2) = −3x − 6</code></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>动手试——观察去括号时符号如何变化</h2>
+    <p class="desc">输入表达式，观察去括号前后的符号对比。红色高亮标注了变号的位置。</p>
+
+    <div class="eq-builder" style="flex-wrap:wrap;gap:6px;">
+      <input id="br-a" type="number" value="3" style="width:55px;">
+      <span class="var">x</span>
+      <select id="br-op1" onchange="updateBracketDemo()" style="padding:6px 8px;border-radius:8px;border:2px solid var(--border);font-size:1rem;font-weight:700;">
+        <option value="+">+</option>
+        <option value="-">−</option>
+      </select>
+      <span style="font-size:1.3rem;">(</span>
+      <input id="br-b" type="number" value="2" style="width:55px;">
+      <span class="var">x</span>
+      <select id="br-op2" onchange="updateBracketDemo()" style="padding:6px 8px;border-radius:8px;border:2px solid var(--border);font-size:1rem;font-weight:700;">
+        <option value="+">+</option>
+        <option value="-">−</option>
+      </select>
+      <input id="br-c" type="number" value="5" style="width:55px;">
+      <span style="font-size:1.3rem;">)</span>
+    </div>
+
+    <div class="eq-display" id="bracket-original" style="margin-top:12px;">
+      3x + (2x + 5)
+    </div>
+
+    <div style="text-align:center;padding:10px;">
+      <span style="font-size:1.4rem;font-weight:700;color:var(--accent);">↓ 去括号后 ↓</span>
+    </div>
+
+    <div class="eq-display" id="bracket-result" style="background:#fffbf0;border-color:var(--accent);">
+      3x + 2x + 5
+    </div>
+
+    <div class="result-box" id="bracket-feedback" style="margin-top:8px;">
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>含括号的方程——综合运用</h2>
+    <p class="desc">先去掉括号，再移项变号、合并同类项。括号外的 − 号是最容易错的地方！</p>
+    <div class="preset-btns">
+      <button onclick="setPresetBracket(1)">2(x + 3) = 10</button>
+      <button onclick="setPresetBracket(2)">3(2x − 1) = 4x + 5</button>
+      <button onclick="setPresetBracket(3)">−(x − 4) = 2x + 1</button>
+      <button onclick="setPresetBracket(4)">5 − 2(x + 3) = x − 1</button>
+    </div>
+    <button class="btn btn-primary" onclick="solveEquation()" style="margin-top:12px;">逐步求解</button>
+    <div id="solve-steps-bracket" style="margin-top:12px;"></div>
+  </div>
+
+  <div class="card">
     <h2>求解步骤口诀</h2>
     <div style="font-size:1.1rem;text-align:center;line-height:2.2;">
+      <div class="step"><span class="step-num">0</span><strong>去括号</strong>——括号前是 − 号，<span class="change pos-to-neg">里面各项全变号</span>；括号前是 + 号，符号不变</div>
       <div class="step"><span class="step-num">1</span><strong>移项</strong>——含 x 的放左边，常数放右边，<span class="change pos-to-neg">过等号变号</span></div>
       <div class="step"><span class="step-num">2</span><strong>合并同类项</strong>——左边合并 x 系数，右边合并常数</div>
       <div class="step"><span class="step-num">3</span><strong>系数化为 1</strong>——两边同除以 x 的系数，得到 x = ?</div>
@@ -1053,6 +1136,7 @@ window.addEventListener('DOMContentLoaded', () => {
   updateCommuteViz();
   updateAssocViz();
   updateEqDisplay();
+  initBracketDemo();
 });
 
 /* ════════════════════════════════════════════ */
@@ -1286,6 +1370,104 @@ function addStep(container, idx, html, tag) {
 
 function resetEquation() {
   document.getElementById('solve-steps').innerHTML = '';
+}
+
+/* ── 去括号符号变化演示 ── */
+function updateBracketDemo() {
+  const a = parseInt(document.getElementById('br-a').value) || 0;
+  const b = parseInt(document.getElementById('br-b').value) || 0;
+  const c = parseInt(document.getElementById('br-c').value) || 0;
+  const op1 = document.getElementById('br-op1').value; // + or - before bracket
+  const op2 = document.getElementById('br-op2').value; // + or - after b
+  const fb = document.getElementById('bracket-feedback');
+
+  // Original expression
+  const bSign = b >= 0 ? '' : '− ';
+  const bAbs = Math.abs(b);
+  const cSign = c >= 0 ? '+' : '−';
+  const cAbs = Math.abs(c);
+  const bTerm = b === 0 ? '0' : (bAbs === 1 ? 'x' : bAbs + 'x');
+  const bTermDisplay = (b === 0 ? '0' : (bAbs === 1 ? 'x' : bAbs + 'x'));
+
+  let orig = '';
+  if (a !== 0) orig += a + 'x ';
+  orig += op1 + ' (' + (b !== 0 ? bTerm + ' ' : '') + cSign + ' ' + cAbs + ')';
+
+  document.getElementById('bracket-original').textContent = orig;
+
+  // After removing brackets
+  let afterATerm = '';
+  if (a !== 0) {
+    if (a === 1) afterATerm = 'x';
+    else if (a === -1) afterATerm = '− x';
+    else afterATerm = a + 'x';
+  }
+
+  let afterB, afterC;
+  if (op1 === '+') {
+    // signs don't change
+    afterB = b >= 0 ? (b===0 ? '' : '+ ' + bTerm) : '− ' + Math.abs(b) + 'x';
+    afterC = c >= 0 ? '+ ' + c : '− ' + Math.abs(c);
+  } else {
+    // signs all flip!
+    afterB = b >= 0 ? (b===0 ? '' : '− ' + bTerm) : '+ ' + Math.abs(b) + 'x';
+    afterC = c >= 0 ? '− ' + c : '+ ' + Math.abs(c);
+  }
+
+  let result = afterATerm;
+  if (afterB) result += ' ' + afterB;
+  if (afterC) result += ' ' + afterC;
+  if (!result.trim()) result = '0';
+  result = result.trim().replace(/\s+/g, ' ');
+
+  document.getElementById('bracket-result').textContent = result;
+
+  // Feedback on sign changes
+  if (op1 === '-') {
+    const changes = [];
+    if (b !== 0) {
+      const oldBSign = b > 0 ? '+' : '−';
+      const newBSign = b > 0 ? '−' : '+';
+      changes.push(`${oldBSign}${bTerm} → <span class="change pos-to-neg">${newBSign} ${bAbs===1?'x':bAbs+'x'}</span>`);
+    }
+    if (c !== 0) {
+      const oldCSign = c > 0 ? '+' : '−';
+      const newCSign = c > 0 ? '−' : '+';
+      changes.push(`${oldCSign}${cAbs} → <span class="change pos-to-neg">${newCSign}${cAbs}</span>`);
+    }
+    if (changes.length > 0) {
+      fb.innerHTML = `<span class="eq">括号前是 − 号：</span>括号内各项全部变号！${changes.join('，')}`;
+    } else {
+      fb.innerHTML = '<span class="eq">括号前是 − 号，但括号内为空，无变化</span>';
+    }
+  } else {
+    fb.innerHTML = '<span class="eq">括号前是 + 号：</span>去掉括号后各项符号保持不变';
+  }
+}
+
+function setPresetBracket(n) {
+  // Each preset: {original display, expanded a,b,c,d}
+  // After expansion, set the coefficients in the main equation inputs
+  const presets = {
+    1: {a:2, b:6, c:0, d:10, desc: '2(x + 3) = 10 → 展开：2x + 6 = 10'},
+    2: {a:6, b:-3, c:4, d:5, desc: '3(2x − 1) = 4x + 5 → 展开：6x − 3 = 4x + 5'},
+    3: {a:-1, b:4, c:2, d:1, desc: '−(x − 4) = 2x + 1 → 去括号：−x + 4 = 2x + 1'},
+    4: {a:-2, b:-1, c:1, d:-1, desc: '5 − 2(x + 3) = x − 1 → 展开：−2x − 1 = x − 1'},
+  };
+  const p = presets[n];
+  document.getElementById('eq-a').value = p.a;
+  document.getElementById('eq-b').value = p.b;
+  document.getElementById('eq-c').value = p.c;
+  document.getElementById('eq-d').value = p.d;
+  updateEqDisplay();
+  // Show a note about the bracket expansion
+  const container = document.getElementById('solve-steps-bracket');
+  container.innerHTML = `<div class="step"><span class="step-num">0</span><strong>去括号：</strong>${p.desc}</div>`;
+}
+
+// Initialize bracket demo on load
+function initBracketDemo() {
+  updateBracketDemo();
 }
 
 // Scale visualization
