@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>数学运算定律 — 交换律、结合律与一元一次方程</title>
+<title>数学运算 — 交换律、结合律、一元一次方程与单位换算</title>
 <style>
   :root {
     --bg: #f5f0eb;
@@ -518,19 +518,169 @@
     .tabs button { padding:8px 18px; font-size:.85rem; }
     .card { padding:18px 16px; }
   }
+
+  /* ── Unit Conversion ── */
+  .unit-cat-select {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+  .unit-cat-select button {
+    padding: 8px 16px;
+    border-radius: 20px;
+    border: 2px solid var(--border);
+    background: var(--card);
+    cursor: pointer;
+    font-size: .88rem;
+    font-weight: 600;
+    transition: var(--transition);
+    font-family: inherit;
+    white-space: nowrap;
+  }
+  .unit-cat-select button:hover { border-color: var(--accent); }
+  .unit-cat-select button.active {
+    background: var(--accent2);
+    color: #fff;
+    border-color: var(--accent2);
+    box-shadow: 0 3px 10px rgba(74,140,92,.3);
+  }
+  .unit-conv-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 16px 0;
+  }
+  .unit-conv-row input {
+    width: 120px;
+    padding: 12px 14px;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    font-size: 1.1rem;
+    text-align: center;
+    outline: none;
+    font-family: inherit;
+  }
+  .unit-conv-row input:focus { border-color: var(--accent2); }
+  .unit-conv-row select {
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 2px solid var(--border);
+    font-size: .95rem;
+    font-weight: 600;
+    outline: none;
+    background: var(--card);
+    font-family: inherit;
+    cursor: pointer;
+  }
+  .unit-conv-row select:focus { border-color: var(--accent2); }
+  .unit-arrow {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--accent2);
+  }
+  .unit-result {
+    text-align: center;
+    font-size: 1.25rem;
+    font-weight: 700;
+    padding: 16px;
+    background: #f0fdf4;
+    border-radius: 12px;
+    margin: 12px 0;
+    border: 2px solid #bbf7d0;
+  }
+  .unit-result .big { font-size: 1.5rem; color: var(--accent2); }
+  .unit-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: .9rem;
+    margin: 10px 0;
+  }
+  .unit-table th {
+    background: #fdfaf5;
+    padding: 8px 12px;
+    text-align: center;
+    font-weight: 700;
+    border-bottom: 2px solid var(--border);
+  }
+  .unit-table td {
+    padding: 7px 12px;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+  }
+  .unit-table tr:nth-child(even) { background: #fdfaf5; }
+  .unit-table .arrow-cell { color: var(--accent2); font-weight: 700; }
+
+  .think-box {
+    background: #fffbf0;
+    border: 2px solid #e8d5a3;
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin: 14px 0;
+  }
+  .think-box h3 {
+    font-size: 1rem;
+    margin-bottom: 8px;
+    color: #b85e1a;
+  }
+  .think-line {
+    padding: 4px 0;
+    font-size: .92rem;
+    position: relative;
+    padding-left: 24px;
+    color: #5a4a2a;
+  }
+  .think-line::before {
+    content: '💡';
+    position: absolute;
+    left: 0;
+    font-size: .8rem;
+  }
+
+  .chain-viz {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 14px;
+    overflow-x: auto;
+  }
+  .chain-node {
+    padding: 8px 14px;
+    border-radius: 20px;
+    font-weight: 700;
+    font-size: .88rem;
+    white-space: nowrap;
+  }
+  .chain-node.from { background: #e8f5e9; border: 2px solid var(--accent2); color: #1e7e34; }
+  .chain-node.mid  { background: #fff3cd; border: 2px solid #d4a017; color: #856404; }
+  .chain-node.to   { background: #cfe2ff; border: 2px solid #0d6efd; color: #0a53be; }
+  .chain-op {
+    font-weight: 700;
+    font-size: .82rem;
+    color: var(--sub);
+    padding: 4px 8px;
+    background: #fdfaf5;
+    border-radius: 8px;
+    white-space: nowrap;
+  }
 </style>
 </head>
 <body>
 
 <div class="hero">
-  <h1>数学运算定律</h1>
-  <p>通过交互理解交换律、结合律与一元一次方程</p>
+  <h1>数学运算探索</h1>
+  <p>通过交互理解交换律、结合律、一元一次方程与单位换算</p>
 </div>
 
 <div class="tabs">
   <button id="tab-commute" class="active" onclick="switchTab('commute')">交换律</button>
   <button id="tab-assoc" onclick="switchTab('assoc')">结合律</button>
   <button id="tab-eq" onclick="switchTab('equation')">一元一次方程</button>
+  <button id="tab-unit" onclick="switchTab('unit')">单位换算</button>
 </div>
 
 <div class="container">
@@ -951,6 +1101,72 @@
   </div>
 </div>
 
+<!-- ════════════════════════════════════════════ -->
+<!--  单位换算 Tab                             -->
+<!-- ════════════════════════════════════════════ -->
+<div id="unit" class="tab-content">
+
+  <div class="card">
+    <h2>单位换算——规则与思考</h2>
+    <p class="desc">
+      单位换算的核心是<strong>记住进率</strong>（相邻单位之间的倍数关系），然后根据进率进行<strong>乘除运算</strong>。
+      大单位 → 小单位用<strong>乘法</strong>；小单位 → 大单位用<strong>除法</strong>。
+    </p>
+    <div class="tip">
+      <strong>换算口诀：</strong>大化小，乘进率；小化大，除进率。进率就是相邻两个单位之间的倍数。
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>选择单位类型</h2>
+    <div class="unit-cat-select">
+      <button onclick="setUnitCat('length')" id="ucat-length" class="active">长度</button>
+      <button onclick="setUnitCat('area')" id="ucat-area">面积</button>
+      <button onclick="setUnitCat('volume')" id="ucat-volume">体积</button>
+      <button onclick="setUnitCat('capacity')" id="ucat-capacity">容积</button>
+      <button onclick="setUnitCat('weight')" id="ucat-weight">重量</button>
+    </div>
+
+    <div class="unit-conv-row">
+      <input type="number" id="unit-input" value="1" oninput="doConvert()" min="0" step="any">
+      <select id="unit-from" onchange="doConvert()"></select>
+      <span class="unit-arrow">→</span>
+      <select id="unit-to" onchange="doConvert()"></select>
+    </div>
+
+    <div class="unit-result" id="unit-result">
+      <span class="big">—</span>
+    </div>
+
+    <div class="think-box" id="unit-think">
+      <h3>思考过程</h3>
+      <div id="unit-think-content">请选择单位和数值</div>
+    </div>
+
+    <div id="unit-chain" class="chain-viz"></div>
+  </div>
+
+  <div class="card">
+    <h2 id="unit-table-title">长度单位进率表</h2>
+    <div style="overflow-x:auto;">
+      <table class="unit-table" id="unit-table"></table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>换算规则详解</h2>
+    <div id="unit-rules"></div>
+  </div>
+
+  <div class="card">
+    <h2>常见换算例题</h2>
+    <div class="preset-btns" id="unit-examples"></div>
+    <div class="result-box" id="unit-example-result" style="margin-top:12px;">
+      点击上方例题查看解答
+    </div>
+  </div>
+</div>
+
 </div><!-- /container -->
 
 <script>
@@ -963,6 +1179,7 @@ function switchTab(name) {
   if(name==='commute') runCommute();
   else if(name==='assoc') runAssoc();
   else if(name==='equation') updateEqDisplay();
+  else if(name==='unit') initUnitTab();
 }
 
 /* ════════════════════════════════════════════ */
@@ -1503,6 +1720,241 @@ function updateScale() {
   document.getElementById('pan-left').innerHTML = `左边<br><span class="val">${leftText}</span>`;
   document.getElementById('pan-right').innerHTML = `右边<br><span class="val">${rightText}</span>`;
   document.getElementById('scale-desc').textContent = desc;
+}
+
+/* ════════════════════════════════════════════ */
+/*  单位换算                                   */
+/* ════════════════════════════════════════════ */
+const unitData = {
+  length: {
+    name: '长度',
+    units: [
+      { abbreviation:'mm', name:'毫米', toBase: 1 },
+      { abbreviation:'cm', name:'厘米', toBase: 10 },
+      { abbreviation:'dm', name:'分米', toBase: 100 },
+      { abbreviation:'m',  name:'米',   toBase: 1000 },
+      { abbreviation:'km', name:'千米', toBase: 1000000 },
+    ],
+    ruleDesc: '相邻单位进率：1 km = 1000 m（千进位），其他相邻单位进率为 <strong>10</strong>。',
+    ruleDetail: '毫米 → 厘米 → 分米 → 米：每相邻两个单位进率是 <strong>10</strong>（十进制）。<br>米 → 千米：进率是 <strong>1000</strong>（千进位）。<br>思考：10 毫米 = 1 厘米，10 厘米 = 1 分米，10 分米 = 1 米，1000 米 = 1 千米。',
+    examples: [
+      {v:5, from:'m', to:'cm', desc:'5 米 = ? 厘米'},
+      {v:300, from:'cm', to:'m', desc:'300 厘米 = ? 米'},
+      {v:2.5, from:'km', to:'m', desc:'2.5 千米 = ? 米'},
+      {v:1500, from:'m', to:'km', desc:'1500 米 = ? 千米'},
+    ],
+  },
+  area: {
+    name: '面积',
+    units: [
+      { abbreviation:'mm²', name:'平方毫米', toBase: 1 },
+      { abbreviation:'cm²', name:'平方厘米', toBase: 100 },
+      { abbreviation:'dm²', name:'平方分米', toBase: 10000 },
+      { abbreviation:'m²',  name:'平方米',   toBase: 1000000 },
+      { abbreviation:'公顷', name:'公顷',     toBase: 1e10 },
+      { abbreviation:'km²', name:'平方千米', toBase: 1e12 },
+    ],
+    ruleDesc: '相邻单位进率：<strong>100</strong>（因为面积是长度 × 长度，10 × 10 = 100）。<br>例外：1 km² = 100 公顷，1 公顷 = 10000 m²。',
+    ruleDetail: '平方毫米 → 平方厘米 → 平方分米 → 平方米：每相邻进率 <strong>100</strong>。<br>1 m² = 100 dm²，1 dm² = 100 cm²，1 cm² = 100 mm²。<br>1 公顷 = 10000 m²，1 km² = 100 公顷。<br>思考：面积是平方关系，长度进率 10 → 面积进率 10² = 100。',
+    examples: [
+      {v:3, from:'m²', to:'cm²', desc:'3 平方米 = ? 平方厘米'},
+      {v:500, from:'公顷', to:'km²', desc:'500 公顷 = ? 平方千米'},
+      {v:2, from:'dm²', to:'cm²', desc:'2 平方分米 = ? 平方厘米'},
+    ],
+  },
+  volume: {
+    name: '体积',
+    units: [
+      { abbreviation:'mm³', name:'立方毫米', toBase: 1 },
+      { abbreviation:'cm³', name:'立方厘米', toBase: 1000 },
+      { abbreviation:'dm³', name:'立方分米', toBase: 1000000 },
+      { abbreviation:'m³',  name:'立方米',   toBase: 1e9 },
+    ],
+    ruleDesc: '相邻单位进率：<strong>1000</strong>（因为体积是长度 × 长度 × 长度，10³ = 1000）。',
+    ruleDetail: '1 m³ = 1000 dm³，1 dm³ = 1000 cm³，1 cm³ = 1000 mm³。<br>思考：体积是立方关系，长度进率 10 → 体积进率 10³ = 1000。<br>1 dm³ = 1 升（L），1 cm³ = 1 毫升（mL）。',
+    examples: [
+      {v:1, from:'m³', to:'cm³', desc:'1 立方米 = ? 立方厘米'},
+      {v:5, from:'dm³', to:'cm³', desc:'5 立方分米 = ? 立方厘米'},
+      {v:5000, from:'cm³', to:'dm³', desc:'5000 立方厘米 = ? 立方分米'},
+    ],
+  },
+  capacity: {
+    name: '容积',
+    units: [
+      { abbreviation:'mL', name:'毫升', toBase: 1 },
+      { abbreviation:'L',  name:'升',   toBase: 1000 },
+    ],
+    ruleDesc: '1 L = <strong>1000</strong> mL（千进位）。1 dm³（立方分米）= 1 L，1 cm³（立方厘米）= 1 mL。',
+    ruleDetail: '升（L）和毫升（mL）之间的进率是 <strong>1000</strong>。<br>1 L = 1000 mL。<br>容积与体积的联系：1 L = 1 dm³，1 mL = 1 cm³。<br>思考：一瓶矿泉水约 500 mL = 0.5 L。',
+    examples: [
+      {v:3, from:'L', to:'mL', desc:'3 升 = ? 毫升'},
+      {v:250, from:'mL', to:'L', desc:'250 毫升 = ? 升'},
+      {v:1.5, from:'L', to:'mL', desc:'1.5 升 = ? 毫升'},
+    ],
+  },
+  weight: {
+    name: '重量/质量',
+    units: [
+      { abbreviation:'g',  name:'克',   toBase: 1 },
+      { abbreviation:'kg', name:'千克', toBase: 1000 },
+      { abbreviation:'t',  name:'吨',   toBase: 1000000 },
+    ],
+    ruleDesc: '相邻单位进率：1 t = 1000 kg，1 kg = 1000 g（都是 <strong>1000</strong> 进位）。',
+    ruleDetail: '克（g）→ 千克（kg）→ 吨（t）：每相邻进率 <strong>1000</strong>。<br>1 t = 1000 kg，1 kg = 1000 g。<br>思考：1 袋大米约 10 kg = 10000 g，1 辆小汽车约 1.5 t = 1500 kg。',
+    examples: [
+      {v:5, from:'kg', to:'g', desc:'5 千克 = ? 克'},
+      {v:2.5, from:'t', to:'kg', desc:'2.5 吨 = ? 千克'},
+      {v:6000, from:'g', to:'kg', desc:'6000 克 = ? 千克'},
+      {v:0.3, from:'t', to:'g', desc:'0.3 吨 = ? 克'},
+    ],
+  },
+};
+
+let currentUnitCat = 'length';
+
+function initUnitTab() {
+  buildUnitUI();
+  doConvert();
+}
+
+function setUnitCat(cat) {
+  currentUnitCat = cat;
+  ['length','area','volume','capacity','weight'].forEach(c => {
+    document.getElementById('ucat-'+c).classList.toggle('active', c===cat);
+  });
+  buildUnitUI();
+  doConvert();
+}
+
+function buildUnitUI() {
+  const cat = unitData[currentUnitCat];
+  document.getElementById('unit-table-title').textContent = cat.name + '单位进率表';
+
+  // Build unit selectors
+  const fromSel = document.getElementById('unit-from');
+  const toSel = document.getElementById('unit-to');
+  fromSel.innerHTML = '';
+  toSel.innerHTML = '';
+  cat.units.forEach((u,i) => {
+    fromSel.innerHTML += `<option value="${i}">${u.name}（${u.abbreviation}）</option>`;
+    toSel.innerHTML += `<option value="${i}">${u.name}（${u.abbreviation}）</option>`;
+  });
+  toSel.selectedIndex = Math.min(1, cat.units.length - 1);
+
+  // Build table
+  const table = document.getElementById('unit-table');
+  let th = '<tr><th>单位</th><th>缩写</th><th></th><th>下级单位</th><th>进率</th>';
+  cat.units.forEach((u,i) => {
+    if (i < cat.units.length - 1) {
+      const next = cat.units[i+1];
+      th += `<tr><td><strong>${u.name}</strong></td><td>${u.abbreviation}</td><td class="arrow-cell">→</td><td>${next.name}（${next.abbreviation}）</td><td><strong>${next.toBase / u.toBase}</strong></td></tr>`;
+    }
+  });
+  table.innerHTML = th;
+
+  // Build rules
+  document.getElementById('unit-rules').innerHTML = cat.ruleDetail;
+
+  // Build examples
+  const exDiv = document.getElementById('unit-examples');
+  exDiv.innerHTML = cat.examples.map((ex,i) =>
+    `<button onclick="solveExample('${ex.from}','${ex.to}',${ex.v},'${ex.desc}')">${ex.desc}</button>`
+  ).join('');
+}
+
+function doConvert() {
+  const cat = unitData[currentUnitCat];
+  const fromIdx = parseInt(document.getElementById('unit-from').value);
+  const toIdx = parseInt(document.getElementById('unit-to').value);
+  const val = parseFloat(document.getElementById('unit-input').value);
+  if (isNaN(val) || val < 0) {
+    document.getElementById('unit-result').innerHTML = '<span style="color:var(--danger);">请输入合法的非负数</span>';
+    document.getElementById('unit-think-content').innerHTML = '请检查输入。';
+    document.getElementById('unit-chain').innerHTML = '';
+    return;
+  }
+
+  const fromUnit = cat.units[fromIdx];
+  const toUnit = cat.units[toIdx];
+  const fromBase = fromUnit.toBase;
+  const toBase = toUnit.toBase;
+
+  // Convert: value × fromBase = total in base unit, then ÷ toBase
+  const result = val * fromBase / toBase;
+  const resultStr = Number.isInteger(result) ? result.toString() : parseFloat(result.toFixed(6)).toString();
+
+  // Display result
+  const isBigToSmall = fromBase > toBase;
+  const opText = isBigToSmall ? '× 进率' : '÷ 进率';
+  const rate = isBigToSmall ? fromBase / toBase : toBase / fromBase;
+
+  document.getElementById('unit-result').innerHTML = `
+    ${val} <strong>${fromUnit.name}</strong> = <span class="big">${resultStr}</span> <strong>${toUnit.name}</strong>
+  `;
+
+  // Thinking process
+  let thinkHtml = '';
+  if (fromIdx === toIdx) {
+    thinkHtml = '同一单位，无需换算。';
+  } else if (isBigToSmall) {
+    thinkHtml = `
+      <div class="think-line">① ${fromUnit.name} → ${toUnit.name}，属于<strong>大单位化小单位</strong>，用<strong>乘法</strong></div>
+      <div class="think-line">② 进率 = ${rate}（1 ${fromUnit.name} = ${rate} ${toUnit.name}）</div>
+      <div class="think-line">③ 计算：${val} × ${rate} = <strong>${resultStr}</strong></div>
+    `;
+  } else {
+    thinkHtml = `
+      <div class="think-line">① ${fromUnit.name} → ${toUnit.name}，属于<strong>小单位化大单位</strong>，用<strong>除法</strong></div>
+      <div class="think-line">② 进率 = ${rate}（${rate} ${fromUnit.name} = 1 ${toUnit.name}）</div>
+      <div class="think-line">③ 计算：${val} ÷ ${rate} = <strong>${resultStr}</strong></div>
+    `;
+  }
+  thinkHtml += `<div class="think-line" style="margin-top:6px;">④ <strong>口诀：</strong>${isBigToSmall ? '大化小，乘进率' : '小化大，除进率'}</div>`;
+  document.getElementById('unit-think-content').innerHTML = thinkHtml;
+
+  // Chain visualization
+  let chain = '';
+  if (fromIdx < toIdx) {
+    for (let i = fromIdx; i < toIdx; i++) {
+      const u1 = cat.units[i];
+      const u2 = cat.units[i+1];
+      const stepRate = u2.toBase / u1.toBase;
+      chain += `<span class="chain-node from">${u1.name}</span>
+                <span class="chain-op">×${stepRate}</span>`;
+    }
+    chain += `<span class="chain-node to">${toUnit.name}</span>`;
+    chain = `<div style="text-align:center;font-size:.85rem;font-weight:600;color:var(--sub);margin:6px 0;">大 → 小，逐级乘进率：</div>` + chain;
+  } else if (fromIdx > toIdx) {
+    for (let i = fromIdx; i > toIdx; i--) {
+      const u1 = cat.units[i];
+      const u2 = cat.units[i-1];
+      const stepRate = u1.toBase / u2.toBase;
+      chain += `<span class="chain-node from">${u1.name}</span>
+                <span class="chain-op">÷${stepRate}</span>`;
+    }
+    chain += `<span class="chain-node to">${toUnit.name}</span>`;
+    chain = `<div style="text-align:center;font-size:.85rem;font-weight:600;color:var(--sub);margin:6px 0;">小 → 大，逐级除进率：</div>` + chain;
+  } else {
+    chain = `<span class="chain-node to">${fromUnit.name} = ${toUnit.name}（同级）</span>`;
+  }
+  document.getElementById('unit-chain').innerHTML = chain;
+}
+
+function solveExample(fromAbbr, toAbbr, val, desc) {
+  const cat = unitData[currentUnitCat];
+  const fromIdx = cat.units.findIndex(u => u.abbreviation === fromAbbr);
+  const toIdx = cat.units.findIndex(u => u.abbreviation === toAbbr);
+  document.getElementById('unit-input').value = val;
+  document.getElementById('unit-from').selectedIndex = fromIdx;
+  document.getElementById('unit-to').selectedIndex = toIdx;
+  doConvert();
+
+  const result = val * cat.units[fromIdx].toBase / cat.units[toIdx].toBase;
+  const resultStr = Number.isInteger(result) ? result : parseFloat(result.toFixed(6));
+  document.getElementById('unit-example-result').innerHTML = `
+    <strong>${desc}</strong><br>
+    解答：${val} ${cat.units[fromIdx].name} = <span class="highlight">${resultStr}</span> ${cat.units[toIdx].name}
+  `;
 }
 </script>
 </body>
